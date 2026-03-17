@@ -3,7 +3,7 @@ import feedparser
 import ollama
 from datetime import datetime
 from time import mktime
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, request, redirect, url_for
 from bs4 import BeautifulSoup
 
 
@@ -160,6 +160,9 @@ def index():
         cursor.execute("SELECT title, link, published_date, summary, feed_name FROM articles ORDER BY published_date DESC")
         rows = cursor.fetchall()
         
+        cursor.execute("SELECT feed_url, prompt FROM feed_prompts")
+        prompts = cursor.fetchall()
+
     # Group articles by their feed_name
     articles_by_feed = {}
     for row in rows:
@@ -201,6 +204,7 @@ def index():
                 {% for feed_name in articles_by_feed.keys() %}
                 <button class="tablinks {% if loop.first %}active{% endif %}" onclick="openTab(event, 'tab_{{ loop.index }}')">{{ feed_name }}</button>
                 {% endfor %}
+                <button class="tablinks" onclick="openTab(event, 'tab_prompts')">⚙️ System Prompts</button>
             </div>
             
             {% for feed_name, articles in articles_by_feed.items() %}
@@ -214,6 +218,21 @@ def index():
                 {% endfor %}
             </div>
             {% endfor %}
+            
+            <div id="tab_prompts" class="tabcontent">
+                <h2>Edit System Prompts</h2>
+                <p>Customize the instruction prompts used by Ollama for each specific feed.</p>
+                {% for feed_url, prompt in prompts %}
+                <div class="article">
+                    <h3>{{ feed_url }}</h3>
+                    <form action="{{ url_for('update_prompt') }}" method="POST">
+                        <input type="hidden" name="feed_url" value="{{ feed_url }}">
+                        <textarea name="prompt" rows="8" style="width: 100%; padding: 10px; margin-bottom: 10px; font-family: monospace; border: 1px solid #ccc; border-radius: 4px; resize: vertical;">{{ prompt }}</textarea><br>
+                        <button type="submit" style="padding: 10px 20px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Save Prompt</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
         {% else %}
             <p>No summaries available yet.</p>
         {% endif %}
@@ -241,7 +260,18 @@ def index():
     </body>
     </html>
     """
-    return render_template_string(html_template, articles_by_feed=articles_by_feed)
+    return render_template_string(html_template, articles_by_feed=articles_by_feed, prompts=prompts)
+
+@app.route("/update_prompt", methods=["POST"])
+def update_prompt():
+    feed_url = request.form.get("feed_url")
+    new_prompt = request.form.get("prompt")
+    if feed_url and new_prompt:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE feed_prompts SET prompt = ? WHERE feed_url = ?", (new_prompt, feed_url))
+            conn.commit()
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     FEEDS = [
