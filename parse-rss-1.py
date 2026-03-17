@@ -3,6 +3,8 @@ import feedparser
 import ollama
 from datetime import datetime
 from time import mktime
+import time
+import threading
 from flask import Flask, render_template_string, request, redirect, url_for
 from bs4 import BeautifulSoup
 
@@ -37,6 +39,11 @@ class SubstackSummarizer:
                 CREATE TABLE IF NOT EXISTS feed_prompts (
                     feed_url TEXT PRIMARY KEY,
                     prompt TEXT
+                )
+            ''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS feeds (
+                    url TEXT PRIMARY KEY
                 )
             ''')
             conn.commit()
@@ -152,6 +159,25 @@ class SubstackSummarizer:
 
 app = Flask(__name__)
 DB_PATH = "summaries.db"
+last_updated_time = "Never"
+
+def fetch_all_feeds():
+    """Iterates through all feeds in the database, processes new articles, and updates the timestamp."""
+    global last_updated_time
+    print("\n--- Running fetch ---")
+    
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT url FROM feeds")
+        feeds = [row[0] for row in cursor.fetchall()]
+        
+    for url in feeds:
+        try:
+            summarizer = SubstackSummarizer(rss_url=url, db_path=DB_PATH)
+            summarizer.fetch_and_process()
+        except Exception as e:
+            print(f"Error during fetch for {url}: {e}")
+    last_updated_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 @app.route("/")
 def index():
@@ -199,6 +225,16 @@ def index():
     </head>
     <body>
         <h1>Substack Article Summaries</h1>
+        <div style="display: flex; align-items: center; gap: 15px; margin-top: -20px; margin-bottom: 20px;">
+            <p style="font-size: 0.9em; color: #666; margin: 0;">Last fetch: {{ last_updated }}</p>
+            <form action="{{ url_for('refresh') }}" method="POST" style="margin: 0;">
+                <button type="submit" style="padding: 5px 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8em; font-weight: bold;">Refresh Now</button>
+            </form>
+            <form action="{{ url_for('add_feed') }}" method="POST" style="margin: 0; display: flex; gap: 5px;">
+                <input type="url" name="feed_url" placeholder="New RSS URL..." required style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 250px;">
+                <button type="submit" style="padding: 5px 10px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8em; font-weight: bold;">Add Feed</button>
+            </form>
+        </div>
         {% if articles_by_feed %}
             <div class="tab">
                 {% for feed_name in articles_by_feed.keys() %}
@@ -260,7 +296,7 @@ def index():
     </body>
     </html>
     """
-    return render_template_string(html_template, articles_by_feed=articles_by_feed, prompts=prompts)
+    return render_template_string(html_template, articles_by_feed=articles_by_feed, prompts=prompts, last_updated=last_updated_time)
 
 @app.route("/update_prompt", methods=["POST"])
 def update_prompt():
@@ -273,19 +309,65 @@ def update_prompt():
             conn.commit()
     return redirect(url_for('index'))
 
+@app.route("/refresh", methods=["POST"])
+def refresh():
+    """Manually trigger a fetch sequence and reload the page."""
+    fetch_all_feeds()
+    return redirect(url_for('index'))
+
+@app.route("/add_feed", methods=["POST"])
+def add_feed():
+    """Adds a new feed to the database, fetches it, and reloads the page."""
+    feed_url = request.form.get("feed_url")
+    if feed_url:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("CREATE TABLE IF NOT EXISTS feeds (url TEXT PRIMARY KEY)")
+            cursor.execute("INSERT OR IGNORE INTO feeds (url) VALUES (?)", (feed_url,))
+            conn.commit()
+            
+        try:
+            summarizer = SubstackSummarizer(rss_url=feed_url, db_path=DB_PATH)
+            summarizer.fetch_and_process()
+        except Exception as e:
+            print(f"Error fetching new feed {feed_url}: {e}")
+    return redirect(url_for('index'))
+
 if __name__ == "__main__":
-    FEEDS = [
-        "https://jimmysjournal.substack.com/feed",
-        "https://mispricedassets.substack.com/feed",
-        "https://aimaker.substack.com/feed",
-        "https://defytheodds88.substack.com/feed",
-        "https://tspasemiconductor.substack.com/feed"
-    ]
+    # Seed the database with default feeds if it's currently empty
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS feeds (
+                url TEXT PRIMARY KEY
+            )
+        ''')
+        cursor.execute("SELECT count(*) FROM feeds")
+        if cursor.fetchone()[0] == 0:
+            default_feeds = [
+                "https://jimmysjournal.substack.com/feed",
+                "https://mispricedassets.substack.com/feed",
+                "https://aimaker.substack.com/feed",
+                "https://defytheodds88.substack.com/feed",
+                "https://tspasemiconductor.substack.com/feed",
+                "https://mphinance.substack.com/feed",
+                "https://jasonschips.substack.com/feed",
+                "https://tscsw.substack.com/feed",
+                "https://reboundcapital.substack.com/feed"
+            ]
+            for f in default_feeds:
+                cursor.execute("INSERT INTO feeds (url) VALUES (?)", (f,))
+            conn.commit()
+
+    def background_fetch():
+        """Background task that fetches new RSS feeds periodically."""
+        while True:
+            fetch_all_feeds()
+            time.sleep(3 * 60 * 60)  # Sleep for 3 hours
     
-    print("--- Fetching new articles before starting server ---")
-    for url in FEEDS:
-        summarizer = SubstackSummarizer(rss_url=url, db_path=DB_PATH)
-        summarizer.fetch_and_process()
+    print("--- Starting background fetch thread ---")
+    fetch_thread = threading.Thread(target=background_fetch, daemon=True)
+    fetch_thread.start()
     
     print("--- Starting Flask Server ---")
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    app.run(debug=True, host="0.0.0.0", port=5001, use_reloader=False)
