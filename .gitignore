@@ -1,6 +1,5 @@
-json__pycache__/
+__pycache__/
 .venv/
-summaries.db
 *.pyc
 .DS_Store
 data/articles.json
