@@ -76,6 +76,7 @@ bash publish.sh
    - Invokes Ollama to generate a summary based on the feed's custom system prompt.
 4. **Templating**: Processes the collected data through `template.html` using Jinja2 to output a fully functional static `index.html`.
 5. **Deployment**: `publish.sh` uses an orphan branch strategy to forcefully push only the required payload files (`index.html` and `data/articles.json`) to the `gh-pages` branch, keeping your master git history clean.
+6. **GitHub Pages Setup**: To serve the statically generated site, navigate to your repository's **Settings > Pages**. Under the **Build and deployment** section, select **Deploy from a branch** as the source. Choose the `gh-pages` branch and the `/ (root)` folder, then click save. Your site will automatically be published whenever `publish.sh` updates the branch.
 
 ## Troubleshooting
 
