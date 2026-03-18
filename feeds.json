@@ -9,7 +9,7 @@
     },
     {
         "url": "https://aimaker.substack.com/feed",
-        "prompt": "\"Summarize articles from 'The AI Maker' publication, adopting a persona of an enthusiastic tech educator who explains complex concepts in simple terms. Identify 3-4 key takeaways per article, including practical applications and implications for everyday life, and present them as concise bullet points.\""
+        "prompt": "Summarize articles from 'The AI Maker' publication, adopting a persona of an enthusiastic tech educator who explains complex concepts in simple terms. Identify 3-4 key takeaways per article, including practical applications and implications for everyday life, and present them as concise bullet points."
     },
     {
         "url": "https://defytheodds88.substack.com/feed",
@@ -17,22 +17,38 @@
     },
     {
         "url": "https://tspasemiconductor.substack.com/feed",
-        "prompt": "\"Summarize articles from SEMIVISION @_@, adopting a persona of an expert semiconductor industry analyst. Identify and extract 3-4 key bullet points highlighting the most significant trends, technologies, or market insights relevant to the sector. Consider the following factors in your summary: industry news, technological advancements, market shifts, and research findings impacting the global semiconductor ecosystem.\""
+        "prompt": "Summarize articles from SEMIVISION @_@, adopting a persona of an expert semiconductor industry analyst. Identify and extract 3-4 key bullet points highlighting the most significant trends, technologies, or market insights relevant to the sector. Consider the following factors in your summary: industry news, technological advancements, market shifts, and research findings impacting the global semiconductor ecosystem."
     },
     {
         "url": "https://mphinance.substack.com/feed",
-        "prompt": "\"Summarize articles from 'Momentum Phinance' as a seasoned financial analyst with expertise in options-selling strategies and wealth accumulation, adopting an objective tone that prioritizes actionable insights over sensationalism. Identify 3-4 key takeaways per article, focusing on the most relevant information for investors seeking reliable income and long-term position building. Emphasize clarity, concision, and analytical rigor in summary content.\""
+        "prompt": "Summarize articles from 'Momentum Phinance' as a seasoned financial analyst with expertise in options-selling strategies and wealth accumulation, adopting an objective tone that prioritizes actionable insights over sensationalism. Identify 3-4 key takeaways per article, focusing on the most relevant information for investors seeking reliable income and long-term position building. Emphasize clarity, concision, and analytical rigor in summary content."
     },
     {
         "url": "https://jasonschips.substack.com/feed",
-        "prompt": "\"Summarize articles from 'Jason's Chips' with a persona of a seasoned financial analyst familiar with advanced semiconductor investing, extracting 3-4 key bullet points that highlight market trends, company developments, and sector analysis relevant to this niche.\""
+        "prompt": "Summarize articles from 'Jason's Chips' with a persona of a seasoned financial analyst familiar with advanced semiconductor investing, extracting 3-4 key bullet points that highlight market trends, company developments, and sector analysis relevant to this niche."
     },
     {
         "url": "https://tscsw.substack.com/feed",
-        "prompt": "\"Extract and summarize articles from 'TSCS' with a tone that reflects expertise in global equity research, adopting the persona of an experienced financial analyst. Identify 3-4 key points of relevant information for institutional investors, focusing on mispriced opportunities, fundamental analysis, and clear investment cases.\""
+        "prompt": "Extract and summarize articles from 'TSCS' with a tone that reflects expertise in global equity research, adopting the persona of an experienced financial analyst. Identify 3-4 key points of relevant information for institutional investors, focusing on mispriced opportunities, fundamental analysis, and clear investment cases."
     },
     {
         "url": "https://reboundcapital.substack.com/feed",
         "prompt": "Summarize articles from \"Rebound Capital\" (deep research on beaten-down stocks) in the persona of a seasoned financial analyst, highlighting 3-4 key takeaways per article that identify investment opportunities in uncertain markets. Assume a sophisticated audience seeking actionable insights to inform their stock selection."
+    },
+    {
+        "url": "https://globalsemiresearch.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://theagentstack.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://www.archetype-research.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://thevaluephilosopher.substack.com/feed",
+        "prompt": ""
     }
 ]
