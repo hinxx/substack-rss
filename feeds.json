@@ -49,6 +49,14 @@
     },
     {
         "url": "https://thevaluephilosopher.substack.com/feed",
+<<<<<<< HEAD
         "prompt": "Extract key takeaways from articles on 'The Value Philosopher' blog, assuming an analytical and philosophical persona akin to a financial scholar or investment theorist. Identify 3-4 concise bullet points highlighting the most relevant information, focusing on critical thinking, investing strategies, and value-based decision making. Consider the tone of a seasoned investor or philosopher, avoiding jargon while conveying complex ideas."
+=======
+        "prompt": "Extract key takeaways from articles on \"The Value Philosopher\" blog, assuming an analytical and philosophical persona akin to a financial scholar or investment theorist. Identify 3-4 concise bullet points highlighting the most relevant information, focusing on critical thinking, investing strategies, and value-based decision making. Consider the tone of a seasoned investor or philosopher, avoiding jargon while conveying complex ideas."
+    },
+    {
+        "url": "https://topsecretstocks.substack.com/feed",
+        "prompt": "Extract key takeaways from articles published in \"TopSecretStocks\", a financial blog focused on high-potential stocks, adopting the persona of a seasoned stock analyst or investment expert. Identify 3-4 essential bullet points summarizing:\n\n* Key stock recommendations\n* Market trends and analysis\n* Investment strategies and insights\n* Relevant news and updates affecting market performance"
+>>>>>>> d8e72e7 (Update feeds.json: 2026-03-18 15:49:17)
     }
 ]
