@@ -1,11 +1,38 @@
 [
-    "https://jimmysjournal.substack.com/feed",
-    "https://mispricedassets.substack.com/feed",
-    "https://aimaker.substack.com/feed",
-    "https://defytheodds88.substack.com/feed",
-    "https://tspasemiconductor.substack.com/feed",
-    "https://mphinance.substack.com/feed",
-    "https://jasonschips.substack.com/feed",
-    "https://tscsw.substack.com/feed",
-    "https://reboundcapital.substack.com/feed"
+    {
+        "url": "https://jimmysjournal.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://mispricedassets.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://aimaker.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://defytheodds88.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://tspasemiconductor.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://mphinance.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://jasonschips.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://tscsw.substack.com/feed",
+        "prompt": ""
+    },
+    {
+        "url": "https://reboundcapital.substack.com/feed",
+        "prompt": ""
+    }
 ]
