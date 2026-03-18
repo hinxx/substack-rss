@@ -37,18 +37,18 @@
     },
     {
         "url": "https://globalsemiresearch.substack.com/feed",
-        "prompt": ""
+        "prompt": "Summarize articles from \"Global Semi Research\" with unique perspectives on the semiconductor industry, adopting a persona as an expert financial analyst and AI observer. Extract 3-4 bullet points highlighting key takeaways, including:\n\n* Company-specific updates (mergers & acquisitions, new product releases)\n* Industry trends (technological advancements, market shifts)\n* Economic implications (supply chain impacts, investment opportunities)\n* Relevant statistics or data points supporting the analysis"
     },
     {
         "url": "https://theagentstack.substack.com/feed",
-        "prompt": ""
+        "prompt": "\"Summarize articles from 'The Agent Stack' newsletter, adopting a persona as an expert AI/ML systems engineer and technical specialist. Extract 3-4 key bullet points of relevant information for each article, focusing on the technical aspects of modern AI agent architecture, control loops, memory systems, orchestration, evaluation, and production deployment methodologies.\""
     },
     {
         "url": "https://www.archetype-research.com/feed",
-        "prompt": ""
+        "prompt": "Summarize articles from Archetype Capital, adopting a persona of a financial analyst with expertise in small-cap AI enablers and semi-conductors, Japan & SEA value chains, and undercovered small-cap AI beneficiaries. Extract 3-4 bullet points highlighting key findings on emerging trends, company performance, and market implications for each article."
     },
     {
         "url": "https://thevaluephilosopher.substack.com/feed",
-        "prompt": ""
+        "prompt": "Extract key takeaways from articles on \"The Value Philosopher\" blog, assuming an analytical and philosophical persona akin to a financial scholar or investment theorist. Identify 3-4 concise bullet points highlighting the most relevant information, focusing on critical thinking, investing strategies, and value-based decision making. Consider the tone of a seasoned investor or philosopher, avoiding jargon while conveying complex ideas."
     }
 ]
