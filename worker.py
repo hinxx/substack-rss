@@ -13,7 +13,7 @@ except ImportError:
 
 DATA_DIR = "data"
 ARTICLES_FILE = os.path.join(DATA_DIR, "articles.json")
-FEEDS_FILE = os.path.join(DATA_DIR, "feeds.json")
+FEEDS_FILE = "feeds.json"
 
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -95,18 +95,19 @@ class SubstackSummarizer:
             print(f"No posts found or invalid RSS URL: {rss_url}")
             return
 
+        existing_links = {a.get("link") for a in self.articles if a.get("link")}
+        new_entries = [entry for entry in feed.entries if entry.link not in existing_links]
+        
+        if not new_entries:
+            print(f"No new articles found for {rss_url}. Skipping.")
+            return
+
         feed_title = feed.feed.get('title', 'Unknown Feed')
         raw_description = feed.feed.get('subtitle', feed.feed.get('description', 'No description available'))
         feed_description = BeautifulSoup(raw_description, "html.parser").get_text(separator=" ", strip=True)
         system_prompt = self._get_system_prompt(rss_url, feed_title, feed_description)
         
-        existing_links = {a["link"] for a in self.articles}
-        new_articles = False
-        
-        for entry in feed.entries:
-            if entry.link in existing_links:
-                continue
-                
+        for entry in new_entries:
             print(f"--- Processing New Article: {entry.title} ---")
             content = entry.get('content', [{'value': entry.get('summary', '')}])[0]['value']
             clean_content = BeautifulSoup(content, "html.parser").get_text(separator=" ", strip=True)
@@ -128,12 +129,10 @@ class SubstackSummarizer:
                 "summary": summary,
                 "feed_name": feed_title
             })
-            new_articles = True
             print(f"Saved summary for: {entry.title}\n")
             
-        if new_articles:
-            self.articles.sort(key=lambda x: x["published_date"], reverse=True)
-            save_json(ARTICLES_FILE, self.articles)
+        self.articles.sort(key=lambda x: x.get("published_date", ""), reverse=True)
+        save_json(ARTICLES_FILE, self.articles)
 
     def render_static_site(self):
         env = Environment(loader=FileSystemLoader('.'))

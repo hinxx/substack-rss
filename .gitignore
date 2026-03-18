@@ -1,5 +1,8 @@
-__pycache__/
+json__pycache__/
 .venv/
 summaries.db
 *.pyc
 .DS_Store
+data/articles.json
+index.html
+.tmp_deploy/
