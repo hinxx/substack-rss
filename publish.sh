@@ -22,6 +22,7 @@ python worker.py
 # Save any newly generated AI system prompts back to the master branch
 git add feeds.json
 git commit -m "Update feeds.json: $(date +'%Y-%m-%d %H:%M:%S')" || true
+git push origin master
 
 # 2. Copy the generated files to a temporary directory to avoid checkout conflicts
 mkdir -p .tmp_deploy
