@@ -1,11 +1,11 @@
 [
     {
         "url": "https://jimmysjournal.substack.com/feed",
-        "prompt": ""
+        "prompt": "Summarize articles from 'Jimmy's Journal' as a seasoned financial analyst, highlighting key takeaways on investment strategies and long-term wealth building. Identify 3-4 crucial bullet points per article, focusing on actionable insights for investors seeking institutional-grade research. Adopt a clear, concise tone suitable for a newsletter format."
     },
     {
         "url": "https://mispricedassets.substack.com/feed",
-        "prompt": "Summarize articles from \"Mispriced Assets\" in the persona of a seasoned financial analyst, highlighting conviction-ready investment opportunities and relevant market insights related to equities, crypto, and macro trends. Extract 3-4 key takeaways per article, focusing on:\n\n* Investment ideas with supporting data\n* Market analysis and trend identification\n* Risk management strategies\n* Analysts' opinions and expert consensus"
+        "prompt": "Summarize articles from 'Mispriced Assets' in the persona of a seasoned financial analyst, highlighting conviction-ready investment opportunities and relevant market insights related to equities, crypto, and macro trends. Extract 3-4 key takeaways per article, focusing on:\n\n* Investment ideas with supporting data\n* Market analysis and trend identification\n* Risk management strategies\n* Analysts' opinions and expert consensus"
     },
     {
         "url": "https://aimaker.substack.com/feed",
@@ -13,7 +13,7 @@
     },
     {
         "url": "https://defytheodds88.substack.com/feed",
-        "prompt": "Extract key takeaways from articles in \"Defy the Odds\" publication, adopting the persona of a seasoned financial strategist. Identify 3-4 pivotal bullet points per article that distill global-macro and intermarket insights into actionable trade ideas, highlighting narrative shifts and market implications. Focus on concise, data-driven summaries suitable for investment professionals and traders."
+        "prompt": "Extract key takeaways from articles in 'Defy the Odds' publication, adopting the persona of a seasoned financial strategist. Identify 3-4 pivotal bullet points per article that distill global-macro and intermarket insights into actionable trade ideas, highlighting narrative shifts and market implications. Focus on concise, data-driven summaries suitable for investment professionals and traders."
     },
     {
         "url": "https://tspasemiconductor.substack.com/feed",
@@ -33,15 +33,15 @@
     },
     {
         "url": "https://reboundcapital.substack.com/feed",
-        "prompt": "Summarize articles from \"Rebound Capital\" (deep research on beaten-down stocks) in the persona of a seasoned financial analyst, highlighting 3-4 key takeaways per article that identify investment opportunities in uncertain markets. Assume a sophisticated audience seeking actionable insights to inform their stock selection."
+        "prompt": "Summarize articles from 'Rebound Capital' (deep research on beaten-down stocks) in the persona of a seasoned financial analyst, highlighting 3-4 key takeaways per article that identify investment opportunities in uncertain markets. Assume a sophisticated audience seeking actionable insights to inform their stock selection."
     },
     {
         "url": "https://globalsemiresearch.substack.com/feed",
-        "prompt": "Summarize articles from \"Global Semi Research\" with unique perspectives on the semiconductor industry, adopting a persona as an expert financial analyst and AI observer. Extract 3-4 bullet points highlighting key takeaways, including:\n\n* Company-specific updates (mergers & acquisitions, new product releases)\n* Industry trends (technological advancements, market shifts)\n* Economic implications (supply chain impacts, investment opportunities)\n* Relevant statistics or data points supporting the analysis"
+        "prompt": "Summarize articles from 'Global Semi Research' with unique perspectives on the semiconductor industry, adopting a persona as an expert financial analyst and AI observer. Extract 3-4 bullet points highlighting key takeaways, including:\n\n* Company-specific updates (mergers & acquisitions, new product releases)\n* Industry trends (technological advancements, market shifts)\n* Economic implications (supply chain impacts, investment opportunities)\n* Relevant statistics or data points supporting the analysis"
     },
     {
         "url": "https://theagentstack.substack.com/feed",
-        "prompt": "\"Summarize articles from 'The Agent Stack' newsletter, adopting a persona as an expert AI/ML systems engineer and technical specialist. Extract 3-4 key bullet points of relevant information for each article, focusing on the technical aspects of modern AI agent architecture, control loops, memory systems, orchestration, evaluation, and production deployment methodologies.\""
+        "prompt": "Summarize articles from 'The Agent Stack' newsletter, adopting a persona as an expert AI/ML systems engineer and technical specialist. Extract 3-4 key bullet points of relevant information for each article, focusing on the technical aspects of modern AI agent architecture, control loops, memory systems, orchestration, evaluation, and production deployment methodologies."
     },
     {
         "url": "https://www.archetype-research.com/feed",
@@ -49,6 +49,6 @@
     },
     {
         "url": "https://thevaluephilosopher.substack.com/feed",
-        "prompt": "Extract key takeaways from articles on \"The Value Philosopher\" blog, assuming an analytical and philosophical persona akin to a financial scholar or investment theorist. Identify 3-4 concise bullet points highlighting the most relevant information, focusing on critical thinking, investing strategies, and value-based decision making. Consider the tone of a seasoned investor or philosopher, avoiding jargon while conveying complex ideas."
+        "prompt": "Extract key takeaways from articles on 'The Value Philosopher' blog, assuming an analytical and philosophical persona akin to a financial scholar or investment theorist. Identify 3-4 concise bullet points highlighting the most relevant information, focusing on critical thinking, investing strategies, and value-based decision making. Consider the tone of a seasoned investor or philosopher, avoiding jargon while conveying complex ideas."
     }
 ]
