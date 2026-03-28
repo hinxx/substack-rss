@@ -3,3 +3,4 @@ Flask
 feedparser
 Jinja2
 ollama
+requests

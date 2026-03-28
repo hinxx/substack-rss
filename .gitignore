@@ -5,3 +5,5 @@ __pycache__/
 data/articles.json
 index.html
 .tmp_deploy/
+cookies.txt
+.codex

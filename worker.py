@@ -1,7 +1,9 @@
 import os
 import json
+from http.cookiejar import MozillaCookieJar
 import feedparser
 import ollama
+import requests
 from datetime import datetime
 from time import mktime
 from bs4 import BeautifulSoup
@@ -14,6 +16,20 @@ except ImportError:
 DATA_DIR = "data"
 ARTICLES_FILE = os.path.join(DATA_DIR, "articles.json")
 FEEDS_FILE = "feeds.json"
+MAX_CONTENT_CHARS = 60000
+SUBSTACK_COOKIES_FILE = os.environ.get("SUBSTACK_COOKIES_FILE")
+SUBSTACK_HINTS = (
+    "subscriber-only",
+    "paid subscribers",
+    "subscribe to continue reading",
+    "subscribe to read",
+    "become a paid subscriber",
+    "upgrade to paid",
+    "members only",
+    "member-only",
+    "sign in",
+    "login",
+)
 
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -35,6 +51,101 @@ class SubstackSummarizer:
         self.model = model
         self.articles = load_json(ARTICLES_FILE, [])
         self.feeds = load_json(FEEDS_FILE, [])
+        self.http_session = self._build_http_session()
+
+    def _build_http_session(self):
+        session = requests.Session()
+        session.headers.update(
+            {
+                "User-Agent": (
+                    "Mozilla/5.0 (X11; Linux x86_64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/133.0.0.0 Safari/537.36"
+                )
+            }
+        )
+
+        if not SUBSTACK_COOKIES_FILE:
+            return session
+
+        if not os.path.exists(SUBSTACK_COOKIES_FILE):
+            print("SUBSTACK_COOKIES_FILE is set but the file does not exist. Continuing without authenticated fetch.")
+            return session
+
+        try:
+            cookie_jar = MozillaCookieJar()
+            cookie_jar.load(SUBSTACK_COOKIES_FILE, ignore_discard=True, ignore_expires=True)
+            session.cookies.update(cookie_jar)
+            print("Loaded browser-exported cookies for optional Substack article fetches.")
+        except Exception as e:
+            print(f"Could not load SUBSTACK_COOKIES_FILE. Continuing without authenticated fetch. Error: {e}")
+
+        return session
+
+    def _rss_content_looks_incomplete(self, content):
+        normalized = " ".join(content.lower().split())
+        if len(normalized) < 1200:
+            return True
+        return any(hint in normalized for hint in SUBSTACK_HINTS)
+
+    def _extract_article_text_from_html(self, html):
+        soup = BeautifulSoup(html, "html.parser")
+
+        for selector in ("script", "style", "noscript", "svg", "form", "button"):
+            for node in soup.select(selector):
+                node.decompose()
+
+        selectors = [
+            "article",
+            "[data-post-body]",
+            ".available-content",
+            ".available-content .body",
+            ".body.markup",
+            ".post-content",
+            ".post-body",
+            "main",
+        ]
+
+        for selector in selectors:
+            for node in soup.select(selector):
+                text = node.get_text(separator=" ", strip=True)
+                if len(text) >= 1200:
+                    return text
+
+        body = soup.body or soup
+        return body.get_text(separator=" ", strip=True)
+
+    def _fetch_article_content(self, article_url):
+        if not SUBSTACK_COOKIES_FILE or not self.http_session.cookies:
+            return None
+
+        try:
+            response = self.http_session.get(article_url, timeout=20)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            print(f"Authenticated fetch failed for {article_url}: {e}")
+            return None
+
+        article_text = self._extract_article_text_from_html(response.text)
+        if not article_text:
+            return None
+
+        return article_text
+
+    def _get_article_content(self, entry):
+        content = entry.get('content', [{'value': entry.get('summary', '')}])[0]['value']
+        clean_content = BeautifulSoup(content, "html.parser").get_text(separator=" ", strip=True)
+
+        if self._rss_content_looks_incomplete(clean_content):
+            fetched_content = self._fetch_article_content(entry.link)
+            if fetched_content and len(fetched_content) > len(clean_content):
+                print("Using authenticated page fetch content.")
+                clean_content = fetched_content
+
+        if len(clean_content) > MAX_CONTENT_CHARS:
+            clean_content = clean_content[:MAX_CONTENT_CHARS] + " ... [Content Truncated]"
+
+        return clean_content
 
     def _get_system_prompt(self, feed_url, feed_title, feed_description):
         for f in self.feeds:
@@ -109,13 +220,7 @@ class SubstackSummarizer:
         
         for entry in new_entries:
             print(f"--- Processing New Article: {entry.title} ---")
-            content = entry.get('content', [{'value': entry.get('summary', '')}])[0]['value']
-            clean_content = BeautifulSoup(content, "html.parser").get_text(separator=" ", strip=True)
-
-            max_chars = 60000
-            if len(clean_content) > max_chars:
-                clean_content = clean_content[:max_chars] + " ... [Content Truncated]"
-
+            clean_content = self._get_article_content(entry)
             summary = self._summarize_article(clean_content, system_prompt)
             
             pub_date = datetime.now()

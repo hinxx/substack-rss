@@ -9,6 +9,7 @@ A Python-based, AI-powered application that automatically fetches Substack RSS f
 - **Dynamic AI Meta-Prompting**: Evaluates the title and description of a new feed to automatically write a custom system prompt, adopting the perfect persona for that specific publication.
 - **Local & Cloud AI Support**: Uses a local Ollama model (`llama3.1:8b`) by default, with automatic fallback to Google Gemini (`gemini-2.5-flash`) if an API key is provided.
 - **Smart Parsing**: Cleans and strips HTML tags using BeautifulSoup, and truncates overly long articles to safely fit within the LLM's context window.
+- **Optional Authenticated Fetching**: Can reuse a browser-exported Substack cookie jar to fetch fuller article text for subscriber-only or teaser-only posts when RSS content is incomplete.
 - **Interactive Web Interface**: A sleek, tabbed UI that renders summaries as Markdown, featuring:
   - Read summaries sorted by reverse chronological order.
   - **Instant Search**: A fast, client-side JavaScript search bar to filter articles by keyword or title.
@@ -65,6 +66,20 @@ bash publish.sh
 ```
 *Once pushed, the included GitHub Action will automatically deploy your site to GitHub Pages.*
 
+### Optional Authenticated Substack Access
+If some feeds expose only teaser text in RSS, you can let the worker reuse an authenticated browser session via a Netscape-format cookie export:
+
+```bash
+export SUBSTACK_COOKIES_FILE="$HOME/.config/substack/cookies.txt"
+python worker.py
+```
+
+Notes:
+
+- This is optional and only used as a fallback when RSS content looks incomplete.
+- The worker supports cookie-file session reuse only. It does not implement interactive login, email/password login, or MFA flows.
+- Keep the cookie file local and out of version control.
+
 ## How it Works
 
 1. **Initialization**: `publish.sh` securely extracts your historical `articles.json` from your deployment branch to ensure it remembers previously summarized articles.
@@ -72,6 +87,7 @@ bash publish.sh
 3. **Summarization**:
    - Checks if the article URL already exists in `data/articles.json`.
    - Uses `BeautifulSoup` to extract raw text from the Substack HTML payload.
+   - If RSS content appears truncated or subscriber-gated and `SUBSTACK_COOKIES_FILE` is set, tries a direct authenticated page fetch and uses the fuller article body when available.
    - Truncates text to prevent context window overflow.
    - Invokes Ollama to generate a summary based on the feed's custom system prompt.
 4. **Templating**: Processes the collected data through `template.html` using Jinja2 to output a fully functional static `index.html`.
@@ -82,4 +98,5 @@ bash publish.sh
 
 - **`Error invoking Ollama`**: Ensure the Ollama app is running in the background and that you have pulled the requested model.
 - **Missing Modules**: Ensure your virtual environment is active and all packages listed in the Installation step are fully installed.
+- **Authenticated Fetch Not Working**: Verify `SUBSTACK_COOKIES_FILE` points to a valid Netscape-format cookie export from your browser and that the session has not expired.
 - **Git Branch Errors**: If `publish.sh` fails due to uncommitted local changes, ensure your working directory is clean before running the script.
