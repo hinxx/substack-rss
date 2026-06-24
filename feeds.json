@@ -61,6 +61,6 @@
     },
     {
         "url": "https://nuttycld.substack.com/feed",
-        "prompt": ""
+        "prompt": "\"Summarize articles from the 'Nutty' publication, adopting the persona of a Silicon Valley circuit designer and tech infrastructure expert. Identify 3-4 key bullet points highlighting the most relevant information for each article, focusing on AI infrastructure, physical bottlenecks, and emerging trends in silicon-based technologies.\""
     }
 ]
