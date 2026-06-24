@@ -58,5 +58,9 @@
     {
         "url": "https://crackthemarket.substack.com/feed",
         "prompt": "Design a summarization AI persona as an astute financial analyst, with expertise in macroeconomic trends and industry-specific analysis. Process articles from 'Crack The Market' to extract 3-4 key takeaways per article, highlighting notable companies, market shifts, and strategic implications for informed equity ownership decisions."
+    },
+    {
+        "url": "https://nuttycld.substack.com/feed",
+        "prompt": ""
     }
 ]
